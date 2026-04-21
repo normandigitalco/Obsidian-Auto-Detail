@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Obsidian Auto Detailing — Frisco, TX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --black:    #070909;
+  --surface:  #0C0F10;
+  --card:     #101415;
+  --border:   #181E1F;
+  --border2:  #222A2C;
+  --blue:     #4FA8DC;
+  --blue-lt:  #7DC0E8;
+  --blue-dim: rgba(79,168,220,0.12);
+  --white:    #EEF3F6;
+  --muted:    #7A8A90;
+  --lighter:  #B0BFC6;
+  --font-d:   'Bebas Neue', sans-serif;
+  --font-b:   'DM Sans', sans-serif;
+  --font-m:   'DM Mono', monospace;
+  --ease:     cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-h:    70px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--font-b);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* Pages */
+.page{display:none}
+.page.active{display:block}
+.page-top{padding-top:var(--nav-h)}
+
+/* NAV */
+nav{position:fixed;inset:0 0 auto 0;height:var(--nav-h);z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(1.25rem,5vw,2.75rem);background:rgba(7,9,9,0.9);backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--border);transition:box-shadow .3s}
+nav.scrolled{box-shadow:0 1px 30px rgba(0,0,0,.6)}
+.nav-brand{cursor:pointer;display:flex;flex-direction:column;gap:2px;user-select:none}
+.nav-brand-name{font-family:var(--font-d);font-size:1.3rem;letter-spacing:.15em;line-height:1;color:var(--white)}
+.nav-brand-tag{font-family:var(--font-m);font-size:.6rem;letter-spacing:.22em;color:var(--blue);text-transform:uppercase;line-height:1}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-size:.75rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);transition:color .2s;position:relative;padding-bottom:3px}
+.nav-links a::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.nav-links a:hover,.nav-links a.active{color:var(--white)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-book{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--black);background:var(--blue);padding:.55rem 1.4rem;transition:background .2s,transform .2s}
+.nav-book:hover{background:var(--blue-lt);transform:translateY(-1px)}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:8px;z-index:950}
+.hamburger span{display:block;width:22px;height:2px;background:var(--white);border-radius:2px;transition:transform .35s var(--ease),opacity .25s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-nav{position:fixed;inset:0;background:var(--black);z-index:899;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:0 clamp(2rem,8vw,4rem);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.mobile-nav.open{opacity:1;pointer-events:all}
+.mobile-nav-item{display:block;font-family:var(--font-d);font-size:clamp(2.8rem,10vw,5rem);letter-spacing:.06em;color:var(--border2);transition:color .25s;line-height:1.1;cursor:pointer;border-bottom:1px solid var(--border);width:100%;padding:.5rem 0}
+.mobile-nav-item:last-of-type{border:none}
+.mobile-nav-item:hover{color:var(--white)}
+.mobile-nav-footer{margin-top:2.5rem;display:flex;flex-direction:column;gap:.4rem}
+.mobile-nav-footer span{font-family:var(--font-m);font-size:.68rem;letter-spacing:.15em;color:var(--blue);text-transform:uppercase}
+
+/* Layout helpers */
+.container{width:100%;max-width:1180px;margin:0 auto;padding:0 clamp(1.25rem,5vw,2.75rem)}
+.section{padding:clamp(4.5rem,9vw,8rem) 0}
+.label{display:inline-flex;align-items:center;gap:.65rem;font-family:var(--font-m);font-size:.67rem;letter-spacing:.28em;text-transform:uppercase;color:var(--blue);margin-bottom:1.1rem}
+.label::before{content:'';display:block;width:24px;height:1px;background:var(--blue);flex-shrink:0}
+.h-display{font-family:var(--font-d);font-size:clamp(2.8rem,7vw,5.5rem);letter-spacing:.04em;line-height:.93;color:var(--white)}
+.h-display .accent{color:var(--blue)}
+.body-copy{font-size:.98rem;color:var(--muted);line-height:1.8;max-width:500px}
+.hr{width:100%;height:1px;background:var(--border)}
+.btn{display:inline-flex;align-items:center;gap:.6rem;font-size:.75rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;padding:.875rem 2rem;cursor:pointer;transition:transform .2s,background .2s,color .2s,border-color .2s,gap .25s}
+.btn svg{transition:transform .25s var(--ease);flex-shrink:0}
+.btn:hover svg{transform:translateX(3px)}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--blue);color:var(--black);border:1px solid transparent}
+.btn-primary:hover{background:var(--blue-lt)}
+.btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border2)}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+
+/* HERO */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.hero-img{position:absolute;inset:0}
+.hero-img img{object-position:center 30%;filter:brightness(.32) saturate(.75)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,var(--black) 0%,rgba(7,9,9,.5) 45%,rgba(7,9,9,.05) 100%),linear-gradient(to right,rgba(7,9,9,.55) 0%,transparent 65%)}
+.hero-leak{position:absolute;top:-10%;right:-5%;width:55%;height:60%;background:radial-gradient(ellipse at top right,rgba(79,168,220,.08) 0%,transparent 65%);pointer-events:none}
+.hero-content{position:relative;z-index:2;padding:clamp(3rem,6vw,5rem) clamp(1.25rem,5vw,2.75rem);max-width:900px}
+.hero-eyebrow{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 2.5s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero-eyebrow span{font-family:var(--font-m);font-size:.67rem;letter-spacing:.26em;text-transform:uppercase;color:var(--blue)}
+.hero-title{font-family:var(--font-d);font-size:clamp(3.5rem,10vw,8rem);letter-spacing:.04em;line-height:.9;color:var(--white);margin-bottom:1.75rem}
+.hero-title .line2{color:var(--blue)}
+.hero-sub{font-size:clamp(.9rem,2vw,1.05rem);color:var(--lighter);max-width:440px;line-height:1.75;margin-bottom:2.5rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:1rem}
+.hero-stats{position:relative;z-index:2;display:flex;align-items:stretch;border-top:1px solid var(--border);background:rgba(7,9,9,.75);backdrop-filter:blur(10px)}
+.hero-stat{flex:1;padding:1.25rem clamp(1rem,3vw,2rem);border-right:1px solid var(--border);display:flex;flex-direction:column;gap:2px}
+.hero-stat:last-child{border-right:none}
+.hero-stat-num{font-family:var(--font-d);font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:.05em;color:var(--blue);line-height:1}
+.hero-stat-label{font-family:var(--font-m);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+/* INTRO */
+.intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.intro-img-wrap{position:relative;aspect-ratio:4/5;overflow:hidden}
+.intro-img-wrap img{transition:transform .8s var(--ease)}
+.intro-img-wrap:hover img{transform:scale(1.03)}
+.intro-img-accent{position:absolute;bottom:-1px;right:-1px;width:55%;height:3px;background:var(--blue)}
+.intro-text{display:flex;flex-direction:column;gap:1.5rem}
+.intro-pillars{display:flex;flex-direction:column;gap:.75rem;margin-top:.5rem}
+.intro-pillar{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.25rem;border:1px solid var(--border);background:var(--card);transition:border-color .25s}
+.intro-pillar:hover{border-color:var(--blue-dim)}
+.intro-pillar-icon{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--border2);color:var(--blue)}
+.intro-pillar-text{display:flex;flex-direction:column;gap:2px}
+.intro-pillar-text strong{font-size:.88rem;font-weight:600;color:var(--white)}
+.intro-pillar-text span{font-size:.82rem;color:var(--muted)}
+
+/* SERVICES STRIP */
+.services-strip{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.services-strip-header{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;margin-bottom:3rem;flex-wrap:wrap}
+.services-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.svc-card{background:var(--card);padding:2.25rem 2rem;display:flex;flex-direction:column;gap:1rem;position:relative;overflow:hidden;cursor:pointer;transition:background .25s}
+.svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.svc-card:hover{background:var(--surface)}
+.svc-card:hover::before{transform:scaleX(1)}
+.svc-num{font-family:var(--font-m);font-size:.62rem;letter-spacing:.2em;color:var(--border2)}
+.svc-title{font-family:var(--font-d);font-size:1.5rem;letter-spacing:.06em;color:var(--white);line-height:1.1}
+.svc-desc{font-size:.85rem;color:var(--muted);line-height:1.7;flex:1}
+.svc-price{font-family:var(--font-m);font-size:.72rem;letter-spacing:.15em;color:var(--blue);margin-top:auto}
+
+/* GALLERY TEASER */
+.gallery-teaser-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:280px 220px;gap:3px}
+.gt-cell{overflow:hidden;position:relative}
+.gt-cell img{transition:transform .7s var(--ease)}
+.gt-cell:hover img{transform:scale(1.05)}
+.gt-cell.tall{grid-row:span 2}
+.gt-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,9,9,.7) 0%,transparent 40%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:1rem}
+.gt-cell:hover .gt-overlay{opacity:1}
+.gt-overlay span{font-family:var(--font-m);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--blue)}
+
+/* WHY GRID */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)}
+.why-item{background:var(--black);padding:2.5rem 2rem;display:flex;flex-direction:column;gap:.75rem;transition:background .25s}
+.why-item:hover{background:var(--card)}
+.why-icon{color:var(--blue);width:28px;height:28px}
+.why-title{font-family:var(--font-d);font-size:1.3rem;letter-spacing:.06em}
+.why-desc{font-size:.87rem;color:var(--muted);line-height:1.72}
+
+/* CTA BANNER */
+.cta-banner{position:relative;overflow:hidden;background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.cta-banner-img{position:absolute;inset:0}
+.cta-banner-img img{object-position:center 40%;filter:brightness(.18) saturate(.5)}
+.cta-banner-content{position:relative;z-index:2;padding:clamp(4rem,8vw,7rem) clamp(1.25rem,5vw,2.75rem);max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.cta-banner-text{display:flex;flex-direction:column;gap:.75rem}
+.cta-banner-title{font-family:var(--font-d);font-size:clamp(2.2rem,5vw,4rem);letter-spacing:.05em;line-height:.95}
+.cta-banner-sub{font-size:.95rem;color:var(--lighter);max-width:380px}
+
+/* SERVICES PAGE */
+.services-hero{position:relative;padding:clamp(4rem,9vw,7rem) 0 clamp(3rem,6vw,5rem);border-bottom:1px solid var(--border);overflow:hidden}
+.services-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 100% 50%,rgba(79,168,220,.07) 0%,transparent 65%);pointer-events:none}
+.svc-full-grid{display:flex;flex-direction:column}
+.svc-full-row{display:grid;grid-template-columns:80px 1fr auto;align-items:start;gap:2rem;padding:2.5rem 0;border-bottom:1px solid var(--border);transition:background .2s,padding .2s,margin .2s}
+.svc-full-row:last-child{border-bottom:none}
+.svc-full-row:hover{background:var(--card);margin:0 -2rem;padding:2.5rem 2rem}
+.svc-full-num{font-family:var(--font-m);font-size:.65rem;letter-spacing:.2em;color:var(--blue);padding-top:5px}
+.svc-full-body{display:flex;flex-direction:column;gap:.5rem}
+.svc-full-name{font-family:var(--font-d);font-size:1.6rem;letter-spacing:.05em}
+.svc-full-desc{font-size:.88rem;color:var(--muted);max-width:560px;line-height:1.75}
+.svc-full-includes{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.svc-tag{font-family:var(--font-m);font-size:.62rem;letter-spacing:.12em;color:var(--muted);border:1px solid var(--border2);padding:.25rem .65rem}
+.svc-full-pricing{text-align:right;flex-shrink:0}
+.svc-full-price{font-family:var(--font-d);font-size:1.8rem;letter-spacing:.04em;color:var(--blue);line-height:1}
+.svc-full-price-note{font-size:.72rem;color:var(--muted);margin-top:3px}
+
+/* PACKAGES */
+.packages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.pkg-card{background:var(--card);padding:2.5rem 2rem;display:flex;flex-direction:column;gap:1.25rem}
+.pkg-card.featured{background:var(--surface);border-top:2px solid var(--blue)}
+.pkg-badge{font-family:var(--font-m);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--black);background:var(--blue);padding:.25rem .75rem;align-self:flex-start}
+.pkg-name{font-family:var(--font-d);font-size:1.75rem;letter-spacing:.05em}
+.pkg-price{display:flex;align-items:baseline;gap:.3rem}
+.pkg-price-amount{font-family:var(--font-d);font-size:2.5rem;letter-spacing:.04em;color:var(--blue)}
+.pkg-price-from{font-size:.78rem;color:var(--muted)}
+.pkg-divider{height:1px;background:var(--border)}
+.pkg-features{display:flex;flex-direction:column;gap:.6rem}
+.pkg-feature{display:flex;align-items:center;gap:.65rem;font-size:.85rem;color:var(--lighter)}
+.pkg-feature svg{color:var(--blue);flex-shrink:0}
+
+/* GALLERY PAGE */
+.gallery-hero{padding:clamp(4rem,9vw,7rem) 0 clamp(2rem,4vw,3rem);border-bottom:1px solid var(--border)}
+.gallery-filter{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:2rem}
+.filter-btn{font-family:var(--font-m);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:.45rem 1rem;transition:color .2s,border-color .2s,background .2s}
+.filter-btn:hover,.filter-btn.active{color:var(--white);border-color:var(--blue);background:var(--blue-dim)}
+.gallery-masonry{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3rem 0}
+.g-item{position:relative;overflow:hidden;cursor:pointer}
+.g-item.tall{grid-row:span 2}
+.g-item img{height:300px;transition:transform .7s var(--ease)}
+.g-item.tall img{height:603px}
+.g-item:hover img{transform:scale(1.06)}
+.g-item-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,9,9,.8) 0%,transparent 50%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:1.25rem}
+.g-item:hover .g-item-overlay{opacity:1}
+.g-item-label{font-family:var(--font-m);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue)}
+.lightbox{position:fixed;inset:0;z-index:1000;background:rgba(7,9,9,.96);display:none;align-items:center;justify-content:center;padding:2rem}
+.lightbox.open{display:flex}
+.lightbox-inner{position:relative;max-width:900px;max-height:90svh;width:100%}
+.lightbox-inner img{width:100%;height:100%;max-height:85svh;object-fit:contain}
+.lightbox-close{position:absolute;top:-2.5rem;right:0;font-family:var(--font-m);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.5rem;transition:color .2s}
+.lightbox-close:hover{color:var(--white)}
+
+/* ABOUT PAGE */
+.about-hero-inner{display:grid;grid-template-columns:1fr 1fr;min-height:80svh}
+.about-hero-img{position:relative;overflow:hidden}
+.about-hero-img img{object-position:center 20%;filter:brightness(.65) saturate(.8)}
+.about-hero-content{display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(3rem,6vw,5rem);background:var(--black);border-left:1px solid var(--border)}
+.about-story{padding:clamp(4rem,8vw,7rem) 0}
+.about-story-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.about-story-text{display:flex;flex-direction:column;gap:1.5rem}
+.about-story-text p{font-size:.95rem;color:var(--muted);line-height:1.82}
+.about-story-text p strong{color:var(--lighter);font-weight:500}
+.about-story-aside{display:flex;flex-direction:column;gap:1px}
+.about-aside-item{background:var(--card);border:1px solid var(--border);padding:1.75rem 1.5rem;display:flex;flex-direction:column;gap:.35rem;margin-bottom:1px;transition:border-color .25s}
+.about-aside-item:hover{border-color:var(--blue-dim)}
+.about-aside-num{font-family:var(--font-d);font-size:2.2rem;letter-spacing:.04em;color:var(--blue);line-height:1}
+.about-aside-label{font-size:.82rem;color:var(--muted)}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.value-item{background:var(--black);padding:2.25rem 1.75rem;display:flex;flex-direction:column;gap:.75rem;transition:background .25s}
+.value-item:hover{background:var(--card)}
+.value-num{font-family:var(--font-m);font-size:.62rem;letter-spacing:.2em;color:var(--border2)}
+.value-name{font-family:var(--font-d);font-size:1.4rem;letter-spacing:.05em}
+.value-desc{font-size:.85rem;color:var(--muted);line-height:1.72}
+
+/* CONTACT PAGE */
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100svh - var(--nav-h))}
+.contact-info{padding:clamp(3rem,7vw,6rem) clamp(1.25rem,5vw,2.75rem);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;gap:2.5rem}
+.contact-form-panel{padding:clamp(3rem,7vw,6rem) clamp(1.25rem,5vw,2.75rem);display:flex;flex-direction:column;gap:2rem}
+.contact-details{display:flex;flex-direction:column;gap:1.25rem}
+.contact-detail{display:flex;gap:1rem;align-items:flex-start}
+.contact-detail-icon{width:36px;height:36px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0}
+.contact-detail-body{display:flex;flex-direction:column;gap:2px}
+.contact-detail-label{font-family:var(--font-m);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.contact-detail-value{font-size:.95rem;color:var(--lighter)}
+.contact-hours{display:flex;flex-direction:column;gap:.6rem}
+.hours-row{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.hours-row:last-child{border-bottom:none}
+.hours-day{color:var(--muted)}
+.hours-time{color:var(--lighter);font-family:var(--font-m);font-size:.8rem;letter-spacing:.05em}
+.form-title{font-family:var(--font-d);font-size:1.8rem;letter-spacing:.05em}
+.form-sub{font-size:.88rem;color:var(--muted)}
+.contact-form{display:flex;flex-direction:column;gap:1rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field{display:flex;flex-direction:column;gap:.4rem}
+.field label{font-family:var(--font-m);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select,.field textarea{background:var(--card);border:1px solid var(--border2);color:var(--white);font-family:var(--font-b);font-size:.92rem;padding:.85rem 1rem;outline:none;transition:border-color .25s;width:100%;resize:vertical;-webkit-appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}
+.field input::placeholder,.field textarea::placeholder{color:var(--border2)}
+.field select option{background:var(--card)}
+.form-msg{font-family:var(--font-m);font-size:.72rem;letter-spacing:.1em;color:var(--blue);display:none}
+.form-msg.visible{display:block}
+.map-wrap{margin-top:2rem;border:1px solid var(--border);overflow:hidden;height:240px;filter:grayscale(.6) brightness(.7) saturate(.8)}
+.map-wrap iframe{width:100%;height:100%;border:none;display:block}
+
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:3rem 0 2rem}
+.footer-inner{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:3rem;margin-bottom:2.5rem}
+.footer-brand{display:flex;flex-direction:column;gap:.75rem}
+.footer-brand-name{font-family:var(--font-d);font-size:1.4rem;letter-spacing:.12em}
+.footer-brand-desc{font-size:.83rem;color:var(--muted);line-height:1.7;max-width:240px}
+.footer-col-title{font-family:var(--font-m);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);margin-bottom:1rem}
+.footer-links{display:flex;flex-direction:column;gap:.55rem}
+.footer-links a{font-size:.85rem;color:var(--muted);transition:color .2s}
+.footer-links a:hover{color:var(--white)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:1.5rem;border-top:1px solid var(--border);gap:1rem;flex-wrap:wrap}
+.footer-bottom-copy{font-size:.77rem;color:var(--muted)}
+.footer-bottom-agency{font-size:.77rem;color:var(--muted)}
+.footer-bottom-agency a{color:var(--blue);transition:color .2s}
+.footer-bottom-agency a:hover{color:var(--white)}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+.fade-up-d1{transition-delay:.1s}
+.fade-up-d2{transition-delay:.2s}
+.fade-up-d3{transition-delay:.3s}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .nav-links,.nav-book{display:none}
+  .hamburger{display:flex}
+  .mobile-nav{display:flex}
+  .intro-grid,.about-hero-inner,.about-story-grid,.contact-layout{grid-template-columns:1fr}
+  .about-hero-img{height:50vw;min-height:300px}
+  .about-hero-content{border-left:none;border-top:1px solid var(--border)}
+  .services-cards,.packages-grid,.values-grid,.why-grid{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .gallery-masonry{grid-template-columns:repeat(2,1fr)}
+  .g-item.tall{grid-row:span 1}
+  .g-item.tall img{height:300px}
+  .gallery-teaser-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .gt-cell.tall{grid-row:span 1}
+  .svc-full-row{grid-template-columns:50px 1fr}
+  .svc-full-pricing{grid-column:2}
+  .contact-info{border-right:none;border-bottom:1px solid var(--border)}
+  .hero-stats{flex-wrap:wrap}
+  .hero-stat{flex:none;width:50%}
+  .hero-stat:nth-child(2){border-right:none}
+}
+@media(max-width:580px){
+  .form-row{grid-template-columns:1fr}
+  .gallery-masonry{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr}
+  .hero-stats{display:none}
+  .gallery-teaser-grid{grid-template-columns:1fr;grid-template-rows:auto}
+  .gt-cell{height:220px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-brand" onclick="navigate('home')">
+    <span class="nav-brand-name">OBSIDIAN</span>
+    <span class="nav-brand-tag">Auto Detailing — Frisco, TX</span>
+  </div>
+  <div class="nav-links">
+    <a href="#" onclick="navigate('home');return false" data-page="home" class="active">Home</a>
+    <a href="#" onclick="navigate('services');return false" data-page="services">Services</a>
+    <a href="#" onclick="navigate('gallery');return false" data-page="gallery">Gallery</a>
+    <a href="#" onclick="navigate('about');return false" data-page="about">About</a>
+    <a href="#" onclick="navigate('contact');return false" data-page="contact">Contact</a>
+  </div>
+  <a href="#" class="nav-book" onclick="navigate('contact');return false">Book Now</a>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <span class="mobile-nav-item" onclick="navigate('home');closeMobile()">Home</span>
+  <span class="mobile-nav-item" onclick="navigate('services');closeMobile()">Services</span>
+  <span class="mobile-nav-item" onclick="navigate('gallery');closeMobile()">Gallery</span>
+  <span class="mobile-nav-item" onclick="navigate('about');closeMobile()">About</span>
+  <span class="mobile-nav-item" onclick="navigate('contact');closeMobile()">Contact</span>
+  <div class="mobile-nav-footer">
+    <span>(972) 555-0194</span>
+    <span>Frisco, TX — DFW Area</span>
+  </div>
+</div>
+
+<!-- ===== HOME ===== -->
+<div class="page active" id="page-home">
+
+  <section class="hero">
+    <div class="hero-img"><img loading="eager" src="rana-singh-kMoYxA-zgbo-unsplash.jpg" alt="Black Corvette" /></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-leak"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <div class="hero-dot"></div>
+        <span>Frisco, TX — Serving All of DFW</span>
+      </div>
+      <h1 class="hero-title">DETAIL<br><span class="line2">WITHOUT</span><br>COMPROMISE</h1>
+      <p class="hero-sub">Obsidian Auto Detailing brings studio-grade precision to your vehicle. Hand-finished results. No shortcuts. No car-wash corners cut.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-primary" onclick="navigate('contact');return false">
+          Book a Detail
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#" class="btn btn-ghost" onclick="navigate('services');return false">View Services</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">500+</span><span class="hero-stat-label">Vehicles Detailed</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">5.0</span><span class="hero-stat-label">Google Rating</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">3+</span><span class="hero-stat-label">Years in DFW</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">100%</span><span class="hero-stat-label">Hand Finished</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-img-wrap fade-up">
+          <img loading="lazy" src="brad-starkey-Mv26_2hT-xA-unsplash.jpg" alt="Professional detailing" />
+          <div class="intro-img-accent"></div>
+        </div>
+        <div class="intro-text">
+          <div>
+            <div class="label">Who We Are</div>
+            <h2 class="h-display">NOT A<br><span class="accent">CAR WASH.</span><br>A STUDIO.</h2>
+          </div>
+          <p class="body-copy fade-up fade-up-d1">Obsidian was built on a simple belief — your vehicle deserves the same obsessive attention to detail that went into building it. We operate as a professional studio, not a drive-through operation.</p>
+          <div class="intro-pillars">
+            <div class="intro-pillar fade-up fade-up-d1">
+              <div class="intro-pillar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+              <div class="intro-pillar-text"><strong>Paint Protection First</strong><span>Every wash and decon is done with your clear coat in mind.</span></div>
+            </div>
+            <div class="intro-pillar fade-up fade-up-d2">
+              <div class="intro-pillar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div class="intro-pillar-text"><strong>Time Is Taken, Not Cut</strong><span>We limit daily appointments so every car gets our full focus.</span></div>
+            </div>
+            <div class="intro-pillar fade-up fade-up-d3">
+              <div class="intro-pillar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+              <div class="intro-pillar-text"><strong>Products That Perform</strong><span>Professional-grade compounds, coatings, and PPF-safe chemicals only.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section services-strip">
+    <div class="container">
+      <div class="services-strip-header">
+        <div>
+          <div class="label">What We Offer</div>
+          <h2 class="h-display">OUR<br><span class="accent">SERVICES</span></h2>
+        </div>
+        <a href="#" class="btn btn-ghost" onclick="navigate('services');return false">All Services<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+      <div class="services-cards fade-up">
+        <div class="svc-card"><span class="svc-num">01</span><div class="svc-title">EXTERIOR DETAIL</div><div class="svc-desc">Hand wash, clay bar decontamination, wheel deep clean, tire dressing, and a spray sealant finish.</div><div class="svc-price">From $149</div></div>
+        <div class="svc-card"><span class="svc-num">02</span><div class="svc-title">INTERIOR DETAIL</div><div class="svc-desc">Full vacuum, leather conditioning, steam cleaning, panel wipe-down, and odor elimination.</div><div class="svc-price">From $179</div></div>
+        <div class="svc-card"><span class="svc-num">03</span><div class="svc-title">PAINT CORRECTION</div><div class="svc-desc">Single or multi-stage polishing to remove swirl marks, water spots, and oxidation.</div><div class="svc-price">From $399</div></div>
+        <div class="svc-card"><span class="svc-num">04</span><div class="svc-title">CERAMIC COATING</div><div class="svc-desc">Professional-grade nano-ceramic coating with 2–5 year protection. Includes full decon and correction prep.</div><div class="svc-price">From $699</div></div>
+        <div class="svc-card"><span class="svc-num">05</span><div class="svc-title">FULL DETAIL</div><div class="svc-desc">Our most comprehensive single-day service. Interior and exterior combined for a complete showroom restoration.</div><div class="svc-price">From $299</div></div>
+        <div class="svc-card"><span class="svc-num">06</span><div class="svc-title">ENGINE BAY</div><div class="svc-desc">Degreasing, rinse, and dressing of your engine bay for a clean, protected under-hood finish.</div><div class="svc-price">From $89</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;margin-bottom:2rem;flex-wrap:wrap;">
+        <div><div class="label">Our Work</div><h2 class="h-display">THE<br><span class="accent">RESULTS</span></h2></div>
+        <a href="#" class="btn btn-ghost" onclick="navigate('gallery');return false">Full Gallery<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+    </div>
+    <div class="gallery-teaser-grid fade-up" style="max-width:1180px;margin:0 auto;padding:0 clamp(1.25rem,5vw,2.75rem);">
+      <div class="gt-cell tall"><img loading="lazy" src="swansway-motor-group-DyiDM013ARs-unsplash.jpg" alt="Porsche studio" /><div class="gt-overlay"><span>Studio Session</span></div></div>
+      <div class="gt-cell"><img loading="lazy" src="jan-vlacuha-U4IaoKF5aj4-unsplash.jpg" alt="Mercedes interior" /><div class="gt-overlay"><span>Interior Detail</span></div></div>
+      <div class="gt-cell"><img loading="lazy" src="pexels-maheshwar-reddy-83083257-27015313.jpg" alt="White Corvette" /><div class="gt-overlay"><span>Exterior Finish</span></div></div>
+      <div class="gt-cell"><img loading="lazy" src="pexels-bylukemiller-14231674.jpg" alt="Black Lambo" /><div class="gt-overlay"><span>Exotic Detail</span></div></div>
+      <div class="gt-cell"><img loading="lazy" src="pexels-zion-17632108.jpg" alt="Lambo interior" /><div class="gt-overlay"><span>Interior Restore</span></div></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div style="margin-bottom:2.5rem;"><div class="label">Why Obsidian</div><h2 class="h-display">BUILT ON<br><span class="accent">STANDARDS</span></h2></div>
+      <div class="why-grid fade-up">
+        <div class="why-item"><svg class="why-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div class="why-title">PAINT-SAFE PROCESS</div><div class="why-desc">Two-bucket wash methods, pH-neutral soaps, and microfiber only. Your clear coat never touches a sponge or brush.</div></div>
+        <div class="why-item"><svg class="why-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg><div class="why-title">DFW MOBILE SERVICE</div><div class="why-desc">We come to your home or office across Frisco, Plano, McKinney, Allen, and the greater DFW Metroplex.</div></div>
+        <div class="why-item"><svg class="why-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><div class="why-title">5-STAR RATED</div><div class="why-desc">Hundreds of verified reviews from DFW car owners. We maintain a perfect rating because we treat every car like our own.</div></div>
+        <div class="why-item"><svg class="why-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="why-title">INSURED &amp; PROFESSIONAL</div><div class="why-desc">Fully insured operation. We carry liability coverage so your vehicle is protected during every appointment.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-banner">
+    <div class="cta-banner-img"><img loading="lazy" src="pexels-bulat843-1243575272-29922283.jpg" alt="Detail in progress" /></div>
+    <div class="cta-banner-content">
+      <div class="cta-banner-text">
+        <div class="label">Ready to Book?</div>
+        <h2 class="cta-banner-title">YOUR CAR<br><span style="color:var(--blue)">DESERVES THIS.</span></h2>
+        <p class="cta-banner-sub">Same-week appointments available. Serving Frisco and all surrounding DFW communities.</p>
+      </div>
+      <a href="#" class="btn btn-primary" onclick="navigate('contact');return false">Get a Free Quote<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </div>
+
+  <div id="footer-home"></div>
+</div>
+
+<!-- ===== SERVICES ===== -->
+<div class="page page-top" id="page-services">
+  <section class="services-hero">
+    <div class="services-hero-bg"></div>
+    <div class="container">
+      <div class="label">What We Offer</div>
+      <h1 class="h-display" style="margin-bottom:1rem">OUR<br><span class="accent">SERVICES</span></h1>
+      <p class="body-copy">Every service is performed by hand using professional-grade products. Pricing varies by vehicle size — contact us for an exact quote.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-bottom:2rem">
+    <div class="container">
+      <div class="label">A La Carte</div>
+      <div class="svc-full-grid">
+        <div class="svc-full-row fade-up">
+          <div class="svc-full-num">01</div>
+          <div class="svc-full-body">
+            <div class="svc-full-name">EXTERIOR DETAIL</div>
+            <div class="svc-full-desc">Two-bucket hand wash, clay bar decontamination, wheel and tire deep clean, all exterior trim dressed, glass cleaned inside and out, spray sealant protection.</div>
+            <div class="svc-full-includes"><span class="svc-tag">Two-Bucket Wash</span><span class="svc-tag">Clay Bar</span><span class="svc-tag">Wheel Detail</span><span class="svc-tag">Tire Dressing</span><span class="svc-tag">Glass Clean</span><span class="svc-tag">Spray Sealant</span></div>
+          </div>
+          <div class="svc-full-pricing"><div class="svc-full-price">$149+</div><div class="svc-full-price-note">Sedan / Varies by size</div></div>
+        </div>
+        <div class="svc-full-row fade-up">
+          <div class="svc-full-num">02</div>
+          <div class="svc-full-body">
+            <div class="svc-full-name">INTERIOR DETAIL</div>
+            <div class="svc-full-desc">Full vacuum of all surfaces, steam cleaning of fabric, leather conditioning and protection, dashboard and door panel wipe-down, headliner cleaning, and odor neutralization.</div>
+            <div class="svc-full-includes"><span class="svc-tag">Full Vacuum</span><span class="svc-tag">Steam Clean</span><span class="svc-tag">Leather Condition</span><span class="svc-tag">Panel Wipedown</span><span class="svc-tag">Odor Elimination</span></div>
+          </div>
+          <div class="svc-full-pricing"><div class="svc-full-price">$179+</div><div class="svc-full-price-note">Sedan / Varies by size</div></div>
+        </div>
+        <div class="svc-full-row fade-up">
+          <div class="svc-full-num">03</div>
+          <div class="svc-full-body">
+            <div class="svc-full-name">FULL DETAIL</div>
+            <div class="svc-full-desc">Our most popular single-day service. Combines the complete exterior and interior packages for a full showroom restoration. Ideal for vehicles not detailed in 6+ months or being prepped for sale.</div>
+            <div class="svc-full-includes"><span class="svc-tag">Full Exterior</span><span class="svc-tag">Full Interior</span><span class="svc-tag">Engine Bay Available</span><span class="svc-tag">Headlight Restore</span></div>
+          </div>
+          <div class="svc-full-pricing"><div class="svc-full-price">$299+</div><div class="svc-full-price-note">Sedan / Varies by size</div></div>
+        </div>
+        <div class="svc-full-row fade-up">
+          <div class="svc-full-num">04</div>
+          <div class="svc-full-body">
+            <div class="svc-full-name">PAINT CORRECTION</div>
+            <div class="svc-full-desc">Single or multi-stage machine polishing to eliminate swirl marks, light scratches, water spots, and oxidation from your clear coat. Performed under controlled lighting for accurate assessment.</div>
+            <div class="svc-full-includes"><span class="svc-tag">Paint Inspection</span><span class="svc-tag">Machine Polish</span><span class="svc-tag">Single or Multi-Stage</span><span class="svc-tag">Swirl Removal</span><span class="svc-tag">Water Spot Removal</span></div>
+          </div>
+          <div class="svc-full-pricing"><div class="svc-full-price">$399+</div><div class="svc-full-price-note">Varies by condition</div></div>
+        </div>
+        <div class="svc-full-row fade-up">
+          <div class="svc-full-num">05</div>
+          <div class="svc-full-body">
+            <div class="svc-full-name">CERAMIC COATING</div>
+            <div class="svc-full-desc">Professional 9H-rated nano-ceramic coating with 2–5 years of hydrophobic paint protection. Includes full decontamination and paint correction prep before application.</div>
+            <div class="svc-full-includes"><span class="svc-tag">Full Decontamination</span><span class="svc-tag">Paint Correction Prep</span><span class="svc-tag">9H Ceramic</span><span class="svc-tag">Hydrophobic Finish</span><span class="svc-tag">2–5 Year Protection</span></div>
+          </div>
+          <div class="svc-full-pricing"><div class="svc-full-price">$699+</div><div class="svc-full-price-note">Varies by vehicle</div></div>
+        </div>
+        <div class="svc-full-row fade-up">
+          <div class="svc-full-num">06</div>
+          <div class="svc-full-body">
+            <div class="svc-full-name">ENGINE BAY DETAIL</div>
+            <div class="svc-full-desc">Safe degreasing, low-pressure rinse, and protectant dressing of your engine bay. Perfect for shows, inspections, or resale preparation.</div>
+            <div class="svc-full-includes"><span class="svc-tag">Degreaser</span><span class="svc-tag">Low-Pressure Rinse</span><span class="svc-tag">Dressing &amp; Protect</span></div>
+          </div>
+          <div class="svc-full-pricing"><div class="svc-full-price">$89+</div><div class="svc-full-price-note">Add-on or standalone</div></div>
+        </div>
+        <div class="svc-full-row fade-up">
+          <div class="svc-full-num">07</div>
+          <div class="svc-full-body">
+            <div class="svc-full-name">HEADLIGHT RESTORATION</div>
+            <div class="svc-full-desc">Multi-step wet sanding and polishing to restore clarity to yellowed or hazy lenses. Finished with UV sealant to slow re-oxidation.</div>
+            <div class="svc-full-includes"><span class="svc-tag">Wet Sand</span><span class="svc-tag">Machine Polish</span><span class="svc-tag">UV Sealant</span></div>
+          </div>
+          <div class="svc-full-pricing"><div class="svc-full-price">$69+</div><div class="svc-full-price-note">Per pair</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="container">
+      <div style="margin-bottom:2.5rem"><div class="label">Bundled Value</div><h2 class="h-display">DETAIL<br><span class="accent">PACKAGES</span></h2></div>
+      <div class="packages-grid fade-up">
+        <div class="pkg-card">
+          <div class="pkg-name">ESSENTIAL</div>
+          <div class="pkg-price"><span class="pkg-price-from">from</span><span class="pkg-price-amount">$199</span></div>
+          <div class="pkg-divider"></div>
+          <div class="pkg-features">
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Exterior hand wash</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Interior vacuum &amp; wipe</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tire &amp; wheel clean</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Glass cleaning</div>
+          </div>
+          <a href="#" class="btn btn-ghost" onclick="navigate('contact');return false" style="margin-top:auto">Book This<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+        <div class="pkg-card featured">
+          <div class="pkg-badge">Most Popular</div>
+          <div class="pkg-name">SIGNATURE</div>
+          <div class="pkg-price"><span class="pkg-price-from">from</span><span class="pkg-price-amount">$349</span></div>
+          <div class="pkg-divider"></div>
+          <div class="pkg-features">
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Full exterior detail</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Full interior detail</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Clay bar decontamination</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Leather conditioning</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Spray sealant protection</div>
+          </div>
+          <a href="#" class="btn btn-primary" onclick="navigate('contact');return false" style="margin-top:auto">Book This<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-name">OBSIDIAN ELITE</div>
+          <div class="pkg-price"><span class="pkg-price-from">from</span><span class="pkg-price-amount">$899</span></div>
+          <div class="pkg-divider"></div>
+          <div class="pkg-features">
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Everything in Signature</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Single-stage paint correction</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Ceramic coating (1 year)</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Engine bay detail</div>
+            <div class="pkg-feature"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Headlight restoration</div>
+          </div>
+          <a href="#" class="btn btn-ghost" onclick="navigate('contact');return false" style="margin-top:auto">Book This<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-banner">
+    <div class="cta-banner-img"><img loading="lazy" src="rana-singh-M28SAp2I9_k-unsplash.jpg" alt="Clean vehicle" /></div>
+    <div class="cta-banner-content">
+      <div class="cta-banner-text"><div class="label">Get a Quote</div><h2 class="cta-banner-title">NOT SURE<br><span style="color:var(--blue)">WHAT YOU NEED?</span></h2><p class="cta-banner-sub">Send us a message and we'll recommend the right service for your vehicle's condition and budget.</p></div>
+      <a href="#" class="btn btn-primary" onclick="navigate('contact');return false">Contact Us<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </div>
+  <div id="footer-services"></div>
+</div>
+
+<!-- ===== GALLERY ===== -->
+<div class="page page-top" id="page-gallery">
+  <section class="gallery-hero">
+    <div class="container">
+      <div class="label">Our Portfolio</div>
+      <h1 class="h-display">THE<br><span class="accent">GALLERY</span></h1>
+      <p class="body-copy" style="margin-top:1rem">Every vehicle is a statement. Every detail is intentional.</p>
+      <div class="gallery-filter">
+        <button class="filter-btn active" data-filter="all">All Work</button>
+        <button class="filter-btn" data-filter="exterior">Exterior</button>
+        <button class="filter-btn" data-filter="interior">Interior</button>
+        <button class="filter-btn" data-filter="process">Process</button>
+        <button class="filter-btn" data-filter="exotic">Exotics</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="gallery-masonry">
+      <div class="g-item tall" data-cat="exotic" onclick="openLightbox('rana-singh-kMoYxA-zgbo-unsplash.jpg')"><img loading="lazy" src="rana-singh-kMoYxA-zgbo-unsplash.jpg" alt="Black C8" /><div class="g-item-overlay"><span class="g-item-label">Black C8 — Full Detail</span></div></div>
+      <div class="g-item" data-cat="interior" onclick="openLightbox('jan-vlacuha-U4IaoKF5aj4-unsplash.jpg')"><img loading="lazy" src="jan-vlacuha-U4IaoKF5aj4-unsplash.jpg" alt="Mercedes interior" /><div class="g-item-overlay"><span class="g-item-label">Mercedes AMG — Interior</span></div></div>
+      <div class="g-item" data-cat="process" onclick="openLightbox('brad-starkey-Mv26_2hT-xA-unsplash.jpg')"><img loading="lazy" src="brad-starkey-Mv26_2hT-xA-unsplash.jpg" alt="Ferrari detail" /><div class="g-item-overlay"><span class="g-item-label">Ferrari — Studio Session</span></div></div>
+      <div class="g-item" data-cat="exterior" onclick="openLightbox('swansway-motor-group-DyiDM013ARs-unsplash.jpg')"><img loading="lazy" src="swansway-motor-group-DyiDM013ARs-unsplash.jpg" alt="Porsche studio" /><div class="g-item-overlay"><span class="g-item-label">Porsche Macan — Ceramic</span></div></div>
+      <div class="g-item" data-cat="interior" onclick="openLightbox('pexels-autorecords-10054681.jpg')"><img loading="lazy" src="pexels-autorecords-10054681.jpg" alt="Rear seats" /><div class="g-item-overlay"><span class="g-item-label">AMG S-Class — Rear Interior</span></div></div>
+      <div class="g-item tall" data-cat="exotic" onclick="openLightbox('pexels-bylukemiller-14231674.jpg')"><img loading="lazy" src="pexels-bylukemiller-14231674.jpg" alt="Black Lambo" /><div class="g-item-overlay"><span class="g-item-label">Lamborghini — Full Detail</span></div></div>
+      <div class="g-item" data-cat="exterior" onclick="openLightbox('pexels-maheshwar-reddy-83083257-27015313.jpg')"><img loading="lazy" src="pexels-maheshwar-reddy-83083257-27015313.jpg" alt="White Corvette" /><div class="g-item-overlay"><span class="g-item-label">White C8 — Paint Correction</span></div></div>
+      <div class="g-item" data-cat="interior" onclick="openLightbox('pexels-zion-17632108.jpg')"><img loading="lazy" src="pexels-zion-17632108.jpg" alt="Lambo interior" /><div class="g-item-overlay"><span class="g-item-label">Lamborghini — Interior Restore</span></div></div>
+      <div class="g-item" data-cat="process" onclick="openLightbox('pexels-bulat843-1243575272-29922283.jpg')"><img loading="lazy" src="pexels-bulat843-1243575272-29922283.jpg" alt="Foam wash" /><div class="g-item-overlay"><span class="g-item-label">Pre-Wash Foam</span></div></div>
+      <div class="g-item" data-cat="process" onclick="openLightbox('pexels-jarne-aerts-3175149-5693651.jpg')"><img loading="lazy" src="pexels-jarne-aerts-3175149-5693651.jpg" alt="Wheel foam" /><div class="g-item-overlay"><span class="g-item-label">Wheel Decontamination</span></div></div>
+      <div class="g-item" data-cat="exterior" onclick="openLightbox('pexels-introspectivedsgn-4674370.jpg')"><img loading="lazy" src="pexels-introspectivedsgn-4674370.jpg" alt="370Z Nismo" /><div class="g-item-overlay"><span class="g-item-label">370Z Nismo — Exterior Wash</span></div></div>
+      <div class="g-item" data-cat="exterior" onclick="openLightbox('pexels-francisco-medellin-2157170221-34587647.jpg')"><img loading="lazy" src="pexels-francisco-medellin-2157170221-34587647.jpg" alt="Orange Corvette" /><div class="g-item-overlay"><span class="g-item-label">C8 Corvette — Exterior Detail</span></div></div>
+      <div class="g-item" data-cat="process" onclick="openLightbox('pexels-introspectivedsgn-4876675.jpg')"><img loading="lazy" src="pexels-introspectivedsgn-4876675.jpg" alt="Foam cannon" /><div class="g-item-overlay"><span class="g-item-label">Snow Foam Pre-Wash</span></div></div>
+      <div class="g-item" data-cat="exterior" onclick="openLightbox('pexels-gerald-dahmer-92379707-14272844.jpg')"><img loading="lazy" src="pexels-gerald-dahmer-92379707-14272844.jpg" alt="Red Corvette" /><div class="g-item-overlay"><span class="g-item-label">Red C8 — Full Detail Result</span></div></div>
+      <div class="g-item" data-cat="interior" onclick="openLightbox('pexels-eliezer-fernandes-515183518-18326734.jpg')"><img loading="lazy" src="pexels-eliezer-fernandes-515183518-18326734.jpg" alt="VW interior" /><div class="g-item-overlay"><span class="g-item-label">Classic VW — Interior Restore</span></div></div>
+      <div class="g-item" data-cat="exotic" onclick="openLightbox('rana-singh-M28SAp2I9_k-unsplash.jpg')"><img loading="lazy" src="rana-singh-M28SAp2I9_k-unsplash.jpg" alt="White Corvette clean" /><div class="g-item-overlay"><span class="g-item-label">C8 — Post Ceramic Coat</span></div></div>
+    </div>
+  </div>
+  <div id="footer-gallery"></div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <button class="lightbox-close" onclick="closeLightbox()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Close</button>
+    <img loading="lazy" id="lightbox-img" src="" alt="" />
+  </div>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<div class="page" id="page-about">
+  <div class="page-top">
+    <div class="about-hero-inner">
+      <div class="about-hero-img"><img loading="lazy" src="brad-starkey-Mv26_2hT-xA-unsplash.jpg" alt="Detailer at work" style="object-position:center top" /></div>
+      <div class="about-hero-content">
+        <div class="label">Our Story</div>
+        <h1 class="h-display" style="margin-bottom:1.25rem">BUILT FOR<br><span class="accent">THE OBSESSED.</span></h1>
+        <p class="body-copy">Obsidian was founded by car enthusiasts who were tired of settling. We built the studio we always wished existed right here in Frisco, TX.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="about-story">
+    <div class="container">
+      <div class="about-story-grid">
+        <div class="about-story-text">
+          <div><div class="label">The Mission</div><h2 class="h-display">WHY WE<br><span class="accent">DO THIS</span></h2></div>
+          <p>We started Obsidian because we believed DFW deserved a <strong>real detailing studio</strong> — not a spray-and-wipe operation, not an upsell machine, but a genuine craft service run by people who love cars as much as you do.</p>
+          <p>Every product we use is chosen for performance over margin. Every process we follow is designed to protect your paint first. We turned down the volume on the sales pitch and turned up the quality on the work.</p>
+          <p>We're a <strong>small, intentional operation</strong> — we limit daily appointments so every car leaves the way we'd want our own to look. That's not a marketing line. It's how we've earned a 5-star reputation across DFW.</p>
+          <a href="#" class="btn btn-primary" onclick="navigate('contact');return false" style="margin-top:.5rem">Book an Appointment<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+        <div class="about-story-aside fade-up">
+          <div class="about-aside-item"><div class="about-aside-num">500+</div><div class="about-aside-label">Vehicles detailed across DFW since opening</div></div>
+          <div class="about-aside-item"><div class="about-aside-num">5.0</div><div class="about-aside-label">Google rating — maintained across every review</div></div>
+          <div class="about-aside-item"><div class="about-aside-num">3</div><div class="about-aside-label">Years serving Frisco and surrounding communities</div></div>
+          <div class="about-aside-item"><div class="about-aside-num">100%</div><div class="about-aside-label">Hand-finished — zero automated processes</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding-top:3.5rem;padding-bottom:3.5rem">
+    <div class="container">
+      <div style="margin-bottom:2.5rem"><div class="label">What Drives Us</div><h2 class="h-display">OUR<br><span class="accent">VALUES</span></h2></div>
+      <div class="values-grid fade-up">
+        <div class="value-item"><div class="value-num">01</div><div class="value-name">PRECISION OVER SPEED</div><div class="value-desc">We schedule fewer appointments per day so each vehicle gets the full attention it deserves. Quality is not negotiable.</div></div>
+        <div class="value-item"><div class="value-num">02</div><div class="value-name">PAINT PROTECTION FIRST</div><div class="value-desc">Every process we use — from pre-wash to final wipe — is selected to protect your clear coat. We treat your paint like our own.</div></div>
+        <div class="value-item"><div class="value-num">03</div><div class="value-name">HONEST PRICING</div><div class="value-desc">No mystery add-ons. No bait pricing. We quote upfront and stick to it. If we find something unexpected, we call before we proceed.</div></div>
+        <div class="value-item"><div class="value-num">04</div><div class="value-name">CONTINUOUS EDUCATION</div><div class="value-desc">The detailing industry evolves constantly. We stay current on products, techniques, and certifications so clients always get the best.</div></div>
+        <div class="value-item"><div class="value-num">05</div><div class="value-name">COMMUNITY FIRST</div><div class="value-desc">We're a DFW business built on DFW relationships. We give back through local car show sponsorships and community partnerships.</div></div>
+        <div class="value-item"><div class="value-num">06</div><div class="value-name">RESULTS YOU CAN SEE</div><div class="value-desc">We document before and afters and stand behind our work. If something's not right, we make it right — full stop.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="position:relative;height:55vw;max-height:600px;overflow:hidden">
+    <img loading="lazy" src="swansway-motor-group-DyiDM013ARs-unsplash.jpg" alt="Detail studio" style="width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:brightness(.38) saturate(.6)" />
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;text-align:center;padding:2rem">
+      <div class="label">Serving DFW</div>
+      <h2 class="h-display" style="font-size:clamp(1.8rem,4.5vw,3.5rem)">FRISCO · PLANO · MCKINNEY<br><span class="accent">ALLEN · PROSPER · CELINA</span></h2>
+      <p style="color:var(--lighter);font-size:.9rem;max-width:400px">We offer mobile service across the entire North Dallas Metroplex. We bring the studio to you.</p>
+    </div>
+  </section>
+  <div id="footer-about"></div>
+</div>
+
+<!-- ===== CONTACT ===== -->
+<div class="page page-top" id="page-contact">
+  <div class="contact-layout">
+    <div class="contact-info">
+      <div><div class="label">Reach Out</div><h1 class="h-display">LET'S<br><span class="accent">TALK</span></h1></div>
+      <p class="body-copy">Ready to book or have questions? Fill out the form and we'll get back to you within 2 hours during business hours.</p>
+      <div class="contact-details">
+        <div class="contact-detail"><div class="contact-detail-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.72 2 2 0 0 1 3.6 1.55h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.1a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg></div><div class="contact-detail-body"><span class="contact-detail-label">Phone</span><span class="contact-detail-value">(972) 555-0194</span></div></div>
+        <div class="contact-detail"><div class="contact-detail-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="contact-detail-body"><span class="contact-detail-label">Email</span><span class="contact-detail-value">hello@obsidianauto.com</span></div></div>
+        <div class="contact-detail"><div class="contact-detail-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="contact-detail-body"><span class="contact-detail-label">Service Area</span><span class="contact-detail-value">Frisco, TX + All of DFW</span></div></div>
+        <div class="contact-detail"><div class="contact-detail-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="contact-detail-body"><span class="contact-detail-label">Response Time</span><span class="contact-detail-value">Within 2 hours during business hours</span></div></div>
+      </div>
+      <div>
+        <div class="label" style="margin-bottom:1rem">Business Hours</div>
+        <div class="contact-hours">
+          <div class="hours-row"><span class="hours-day">Monday – Friday</span><span class="hours-time">8:00 AM – 6:00 PM</span></div>
+          <div class="hours-row"><span class="hours-day">Saturday</span><span class="hours-time">8:00 AM – 4:00 PM</span></div>
+          <div class="hours-row"><span class="hours-day">Sunday</span><span class="hours-time">Closed</span></div>
+        </div>
+      </div>
+      <div class="map-wrap">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d107099.80127937963!2d-96.8762!3d33.1584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864c3c3a1fd7e739%3A0x7f83fba2b43e82c4!2sFrisco%2C%20TX!5e0!3m2!1sen!2sus!4v1699999999999" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Frisco TX map"></iframe>
+      </div>
+    </div>
+    <div class="contact-form-panel">
+      <div><div class="form-title">GET A QUOTE</div><div class="form-sub" style="margin-top:.4rem">Tell us about your vehicle and what you need. We'll respond with a detailed quote.</div></div>
+      <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="field"><label>First Name</label><input type="text" name="first_name" placeholder="Marcus" required /></div>
+          <div class="field"><label>Last Name</label><input type="text" name="last_name" placeholder="Cole" required /></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Phone</label><input type="tel" name="phone" placeholder="(972) 555-0000" /></div>
+          <div class="field"><label>Email</label><input type="email" name="email" placeholder="you@email.com" required /></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Vehicle Year &amp; Make</label><input type="text" name="vehicle" placeholder="2023 Porsche Cayenne" required /></div>
+          <div class="field"><label>Vehicle Color</label><input type="text" name="color" placeholder="Midnight Blue" /></div>
+        </div>
+        <div class="field">
+          <label>Service Interested In</label>
+          <select name="service" required>
+            <option value="" disabled selected>Select a service...</option>
+            <option>Exterior Detail</option>
+            <option>Interior Detail</option>
+            <option>Full Detail</option>
+            <option>Paint Correction</option>
+            <option>Ceramic Coating</option>
+            <option>Engine Bay Detail</option>
+            <option>Headlight Restoration</option>
+            <option>Essential Package</option>
+            <option>Signature Package</option>
+            <option>Obsidian Elite Package</option>
+            <option>Not Sure — Need a Recommendation</option>
+          </select>
+        </div>
+        <div class="field"><label>Additional Notes</label><textarea name="message" rows="4" placeholder="Let us know about any specific concerns, swirl marks, stains, or anything we should know..."></textarea></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Send My Request<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+        <div class="form-msg" id="formMsg">Your message was sent. We'll be in touch within 2 hours.</div>
+      </form>
+    </div>
+  </div>
+  <div id="footer-contact"></div>
+</div>
+
+<script>
+// Footer
+function footerHTML(){
+  return `<footer style="background:var(--surface);border-top:1px solid var(--border);padding:3rem 0 2rem">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-brand-name">OBSIDIAN</div>
+          <div class="footer-brand-desc">Premium auto detailing serving Frisco, TX and the greater DFW Metroplex. Studio-grade results, every time.</div>
+        </div>
+        <div><div class="footer-col-title">Navigate</div><div class="footer-links">
+          <a href="#" onclick="navigate('home')">Home</a>
+          <a href="#" onclick="navigate('services')">Services</a>
+          <a href="#" onclick="navigate('gallery')">Gallery</a>
+          <a href="#" onclick="navigate('about')">About</a>
+          <a href="#" onclick="navigate('contact')">Contact</a>
+        </div></div>
+        <div><div class="footer-col-title">Services</div><div class="footer-links">
+          <a href="#" onclick="navigate('services')">Exterior Detail</a>
+          <a href="#" onclick="navigate('services')">Interior Detail</a>
+          <a href="#" onclick="navigate('services')">Paint Correction</a>
+          <a href="#" onclick="navigate('services')">Ceramic Coating</a>
+        </div></div>
+        <div><div class="footer-col-title">Contact</div><div class="footer-links">
+          <a href="tel:9725550194">(972) 555-0194</a>
+          <a href="mailto:hello@obsidianauto.com">hello@obsidianauto.com</a>
+          <a href="#">Frisco, TX 75034</a>
+          <a href="#">Mon–Sat: 8AM–6PM</a>
+        </div></div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-bottom-copy">© 2025 Obsidian Auto Detailing. All rights reserved.</span>
+        <span class="footer-bottom-agency">Website by <a href="#">Norman Digital Co.</a> — Frisco, TX</span>
+      </div>
+    </div>
+  </footer>`;
+}
+['home','services','gallery','about','contact'].forEach(p=>{
+  document.getElementById('footer-'+p).innerHTML=footerHTML();
+});
+
+// Router
+function navigate(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.classList.toggle('active',a.dataset.page===page);
+  });
+  window.scrollTo({top:0,behavior:'instant'});
+  observeFadeUps();
+  return false;
+}
+
+// Hamburger
+const hamburger=document.getElementById('hamburger');
+const mobileNav=document.getElementById('mobileNav');
+function closeMobile(){hamburger.classList.remove('open');mobileNav.classList.remove('open');document.body.style.overflow='';}
+hamburger.addEventListener('click',()=>{
+  const open=hamburger.classList.toggle('open');
+  mobileNav.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+});
+
+// Nav scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>30);
+},{passive:true});
+
+// Lightbox
+function openLightbox(src){document.getElementById('lightbox-img').src=src;document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+
+// Gallery filter
+document.addEventListener('click',e=>{
+  if(!e.target.classList.contains('filter-btn'))return;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  e.target.classList.add('active');
+  const filter=e.target.dataset.filter;
+  document.querySelectorAll('.g-item').forEach(item=>{
+    item.style.display=(filter==='all'||item.dataset.cat===filter)?'block':'none';
+  });
+});
+
+// Fade observer
+function observeFadeUps(){
+  const els=document.querySelectorAll('.fade-up:not(.visible)');
+  if(!els.length)return;
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+  },{threshold:0.12});
+  els.forEach(el=>io.observe(el));
+}
+observeFadeUps();
+
+// Form
+function handleSubmit(e){
+  e.preventDefault();
+  const form=e.target;
+  const msg=document.getElementById('formMsg');
+  fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}})
+    .then(r=>{
+      if(r.ok){form.reset();msg.textContent='Your message was sent. We\'ll be in touch within 2 hours.';msg.classList.add('visible');}
+      else{msg.textContent='Something went wrong. Please call us directly.';msg.classList.add('visible');}
+    })
+    .catch(()=>{msg.textContent='Network error. Please call (972) 555-0194.';msg.classList.add('visible');});
+}
+</script>
+</body>
+</html>
